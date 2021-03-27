@@ -3,6 +3,16 @@ import { delay } from 'libs/delay'
 import { initCanvas } from 'libs/canvas'
 
 import { processImage } from 'process-image'
+import { projectPoints } from "process-image/decompose";
+
+const axisColors = [ "red", "green", "blue"]
+const axis = [
+	[ 0, 0, 0, 1 ],
+	[ 10, 0, 0, 1 ],
+	[ 0, 10, 0, 1 ],
+	[ 0, 0, -10, 1 ]
+]
+
 
 function App() {
 
@@ -49,14 +59,27 @@ function App() {
 					const ctx = canvasRef.current.getContext('2d')
 					ctx.putImageData(imageData, 0, 0)
 					ctx.beginPath()
-					for(let i = 0; i < data.length; i++){
-						ctx.moveTo(data[i].x | 0, data[i].y | 0)
-						ctx.lineTo((data[i+1] || data[0]).x | 0, (data[i+1] || data[0]).y | 0)
+					for(let i = 0; i < data.corners.length; i++){
+						ctx.moveTo(data.corners[i].x | 0, data.corners[i].y | 0)
+						ctx.lineTo((data.corners[i+1] || data.corners[0]).x | 0, (data.corners[i+1] || data.corners[0]).y | 0)
 					}
 					ctx.closePath()
-					ctx.strokeStyle = "red"
-					ctx.lineWidth = 2
+					ctx.strokeStyle = "gray"
+					ctx.lineWidth = 1
 					ctx.stroke()
+					
+					const axisPoints = projectPoints(axis, data.cameraMatrix, data.matrix)
+
+					for(let i = 0; i < 3; i++){
+						ctx.beginPath()
+						ctx.moveTo(axisPoints[0].x, axisPoints[0].y)
+						ctx.lineTo(axisPoints[i+1].x, axisPoints[i+1].y)
+						ctx.closePath()
+						ctx.lineWidth = 4
+						ctx.strokeStyle = axisColors[i]
+						ctx.stroke()
+					}
+					
 				}
 
 				if(!stopFlag)
