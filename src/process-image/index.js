@@ -113,12 +113,13 @@ export function processImage (imageData){
 			}
 		
 
-		affine_kernel.run(bufferToPoints(prev_xy), bufferToPoints(curr_xy), affine_transform, 4)
+		homo_kernel.run(bufferToPoints(prev_xy), bufferToPoints(curr_xy), affine_transform, 4)
 
 		const T = bufferToArray(affine_transform.data, 3, 3)
 		const currentHomo = multiply(T, lastHomo)
 		const matrix = decompose(currentHomo, cameraMatrix)
 
+		
 		history.curr_img_pyr = prev_img_pyr
 		history.prev_img_pyr = curr_img_pyr
 
