@@ -6,10 +6,10 @@ import { bufferToArray, decompose, getCameraMatrix, projectPoints } from './deco
 let history = null
 
 const options = {
-	win_size: 20,
+	win_size: 30,
 	max_iterations: 30,
 	epsilon: 0.01,
-	min_eigen: 0.001
+	min_eigen: 0.008
 }
 
 const point_status = new Uint8Array(4)
