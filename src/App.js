@@ -50,9 +50,9 @@ function App() {
 
 			canvasRef.current.width = videoRef.current.videoWidth
 			canvasRef.current.height = videoRef.current.videoHeight
-			const gl = new GL(canvasRef.current)
 
-			const ctx = canvasRef.current.getContext('2d')
+			const gl = new GL(canvasRef.current)
+			gl.setVideoBackground(videoRef.current)
 
 			async function computeImage() {
 
@@ -62,33 +62,7 @@ function App() {
 				const data = processImage(imageData)
 				setFps(Math.round(1000 / (performance.now() - time)))
 				
-				if(data){
-					ctx.putImageData(imageData, 0, 0)
-					ctx.beginPath()
-					for(let i = 0; i < data.corners.length; i++){
-						ctx.moveTo(data.corners[i].x | 0, data.corners[i].y | 0)
-						ctx.lineTo((data.corners[i+1] || data.corners[0]).x | 0, (data.corners[i+1] || data.corners[0]).y | 0)
-					}
-					ctx.closePath()
-					ctx.strokeStyle = "gray"
-					ctx.lineWidth = 1
-					ctx.stroke()
-					
-					const axisPoints = projectPoints(axis, data.cameraMatrix, data.matrix)
-
-					for(let i = 0; i < 3; i++){
-						ctx.beginPath()
-						ctx.moveTo(axisPoints[0].x, axisPoints[0].y)
-						ctx.lineTo(axisPoints[i+1].x, axisPoints[i+1].y)
-						ctx.closePath()
-						ctx.lineWidth = 4
-						ctx.strokeStyle = axisColors[i]
-						ctx.stroke()
-					}
-					
-				}else{
-					ctx.putImageData(imageData, 0, 0)
-				}
+				gl.render(data? data.matrix: null)
 
 				if(!stopFlag)
 					requestAnimationFrame(computeImage)

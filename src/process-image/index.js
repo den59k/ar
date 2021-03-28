@@ -20,12 +20,12 @@ const affine_kernel = new jsfeat.motion_model.affine2d();
 const homo_transform = new jsfeat.matrix_t(3, 3, jsfeat.F32_t | jsfeat.C1_t)
 const affine_transform = new jsfeat.matrix_t(3, 3, jsfeat.F32_t | jsfeat.C1_t)
 
-const scale = 50
+const scale = 2
 const initialPoints = [
-	{ x: 0, y: scale },
+	{ x: -scale, y: scale },
 	{ x: scale, y: scale },
-	{ x: scale, y: 0 },
-	{ x: 0, y: 0 }
+	{ x: scale, y: -scale },
+	{ x: -scale, y: -scale }
 ]
 
 
