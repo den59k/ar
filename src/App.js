@@ -15,6 +15,20 @@ const axis = [
 	[ 0, 0, -10, 1 ]
 ]
 
+const waitCameraData = (videoElement) => new Promise((res, rej) => {
+	let count = 0
+	const interval = setInterval(() => {
+		if(videoElement.readyState === 4){
+			clearInterval(interval)
+			res()
+		}
+		count++
+		if(count === 20){
+			clearInterval(interval)
+			rej("Wrong Camera")
+		}
+	}, 50)
+})
 
 function App() {
 
@@ -37,14 +51,14 @@ function App() {
 
 			videoRef.current.srcObject = stream
 			videoRef.current.play()
-
+			
 			return stream
 		}
 
 
 		async function init(){
 			await initCamera(500)
-			await delay(250)			//Верь мне, так нужно
+			await waitCameraData(videoRef.current)
 		
 			const getImageData = initCanvas(videoRef.current.videoWidth, videoRef.current.videoHeight)
 
@@ -78,7 +92,7 @@ function App() {
 
 	return (
 		<div className="App">
-			<video  ref={videoRef} style={{display: "none"}}/>
+			<video  ref={videoRef} style={{display: "none"}} muted={true}/>
 			<canvas ref={canvasRef}/>
 			<div className="fps">{fps} FPS</div>
 		</div>
