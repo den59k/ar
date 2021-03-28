@@ -92,7 +92,7 @@ function App() {
 
 	return (
 		<div className="App">
-			<video  ref={videoRef} style={{display: "none"}} muted={true}/>
+			<video  ref={videoRef} muted={true}/>
 			<canvas ref={canvasRef}/>
 			<div className="fps">{fps} FPS</div>
 		</div>
