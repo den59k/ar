@@ -1,6 +1,6 @@
 import { inv, multiply, transpose, hypot, divide, cross, add, subtract, sum } from 'mathjs'
 
-const angle = 30
+const angle = 40
 
 export function getCameraMatrix (rows, cols){
 	const f = Math.hypot(cols, rows)/2/(Math.tan(angle/2*Math.PI/180))

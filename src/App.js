@@ -5,6 +5,8 @@ import { initCanvas } from 'libs/canvas'
 import { processImage } from 'process-image'
 import { projectPoints } from "process-image/decompose";
 
+import GL from '3d-graphics'
+
 const axisColors = [ "red", "green", "blue"]
 const axis = [
 	[ 0, 0, 0, 1 ],
@@ -39,13 +41,18 @@ function App() {
 			return stream
 		}
 
+
 		async function init(){
 			await initCamera(500)
 			await delay(250)			//Верь мне, так нужно
+		
 			const getImageData = initCanvas(videoRef.current.videoWidth, videoRef.current.videoHeight)
 
 			canvasRef.current.width = videoRef.current.videoWidth
 			canvasRef.current.height = videoRef.current.videoHeight
+			const gl = new GL(canvasRef.current)
+
+			const ctx = canvasRef.current.getContext('2d')
 
 			async function computeImage() {
 
@@ -56,7 +63,6 @@ function App() {
 				setFps(Math.round(1000 / (performance.now() - time)))
 				
 				if(data){
-					const ctx = canvasRef.current.getContext('2d')
 					ctx.putImageData(imageData, 0, 0)
 					ctx.beginPath()
 					for(let i = 0; i < data.corners.length; i++){
@@ -80,6 +86,8 @@ function App() {
 						ctx.stroke()
 					}
 					
+				}else{
+					ctx.putImageData(imageData, 0, 0)
 				}
 
 				if(!stopFlag)
@@ -96,7 +104,7 @@ function App() {
 
 	return (
 		<div className="App">
-			<video  ref={videoRef}/>
+			<video  ref={videoRef} style={{display: "none"}}/>
 			<canvas ref={canvasRef}/>
 			<div className="fps">{fps} FPS</div>
 		</div>

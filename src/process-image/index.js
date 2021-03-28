@@ -7,7 +7,7 @@ let history = null
 
 const options = {
 	win_size: 30,
-	max_iterations: 30,
+	max_iterations: 50,
 	epsilon: 0.01,
 	min_eigen: 0.008
 }
