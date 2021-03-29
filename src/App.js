@@ -71,6 +71,7 @@ function App() {
 			async function computeImage() {
 
 				const imageData = getImageData(videoRef.current)
+				gl.updateBackground()
 				
 				const time = performance.now()
 				const data = processImage(imageData)

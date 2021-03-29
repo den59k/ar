@@ -25,7 +25,7 @@ export default class GL{
 		this.renderer.autoClear = false
 
 		this.scene = new THREE.Scene()
-		this.camera = new THREE.PerspectiveCamera( 70, canvas.width / canvas.height, 0.1, 1000 )
+		this.camera = new THREE.PerspectiveCamera( 40, canvas.width / canvas.height, 0.1, 1000 )
 		this.camera.position.z = 0;
 
 		this.light = new THREE.AmbientLight( "E3B1B0", 1.5);
@@ -39,10 +39,15 @@ export default class GL{
 	}
 
 	setVideoBackground(video){
-		const texture = new THREE.VideoTexture( video );
-		texture.needsUpdate = true
+		this.videoTexture = new THREE.VideoTexture( video );
+		this.videoTexture.needsUpdate = false
 
-		this.scene.background = texture
+		this.scene.background = this.videoTexture
+	}
+
+	updateBackground () {
+		this.videoTexture.update()
+		this.videoTexture.needsUpdate = false
 	}
 
 	importModel(src){
