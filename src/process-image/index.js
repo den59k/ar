@@ -1,13 +1,13 @@
 import jsfeat from 'jsfeat'
 import jsQR from 'jsqr'
-import { multiply } from 'mathjs'
+import { det, multiply } from 'mathjs'
 import { bufferToArray, decompose, getCameraMatrix, projectPoints } from './decompose'
 
 let history = null
 
 const options = {
 	win_size: 30,
-	max_iterations: 30,
+	max_iterations: 40,
 	epsilon: 0.01,
 	min_eigen: 0.008
 }
@@ -56,8 +56,8 @@ export function processImage (imageData){
 				bottomLeftFinderPattern, bottomRightAlignmentPattern, topRightFinderPattern, topLeftFinderPattern
 			]
 
-			const curr_img_pyr = new jsfeat.pyramid_t(8)
-			const prev_img_pyr = new jsfeat.pyramid_t(8)
+			const curr_img_pyr = new jsfeat.pyramid_t(9)
+			const prev_img_pyr = new jsfeat.pyramid_t(9)
 			curr_img_pyr.allocate(width, height, jsfeat.U8_t|jsfeat.C1_t)
 			prev_img_pyr.allocate(width, height, jsfeat.U8_t|jsfeat.C1_t)
 			
@@ -116,6 +116,12 @@ export function processImage (imageData){
 		homo_kernel.run(bufferToPoints(prev_xy), bufferToPoints(curr_xy), affine_transform, 4)
 
 		const T = bufferToArray(affine_transform.data, 3, 3)
+
+		if(Math.abs(det(T)-1) > 0.3){
+			history = null
+			return null
+		}
+
 		const currentHomo = multiply(T, lastHomo)
 		const matrix = decompose(currentHomo, cameraMatrix)
 
