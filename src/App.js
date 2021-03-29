@@ -60,18 +60,18 @@ function App() {
 			await initCamera(500)
 			await waitCameraData(videoRef.current)
 		
-			const getImageData = initCanvas(videoRef.current.videoWidth, videoRef.current.videoHeight)
+			const { getImageData, canvas } = initCanvas(videoRef.current.videoWidth, videoRef.current.videoHeight)
 
 			canvasRef.current.width = videoRef.current.videoWidth
 			canvasRef.current.height = videoRef.current.videoHeight
 
 			const gl = new GL(canvasRef.current)
-			gl.setVideoBackground(videoRef.current)
+			gl.setVideoBackground(canvas)
 
 			async function computeImage() {
 
-				gl.updateBackground()
 				const imageData = getImageData(videoRef.current)
+				gl.updateBackground()
 				
 				const time = performance.now()
 				const data = processImage(imageData)
