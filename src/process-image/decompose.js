@@ -40,7 +40,7 @@ export function decompose (_H, mtx){
 
 	const ext = transpose(multiply(_mtx, H))
 
-	const l = hypot(ext[0])
+	const l = Math.sqrt(hypot(ext[0]) * hypot(ext[1]))
 
 	const rot1 = divide(ext[0], l)					//Мы нормализуем все по первому столбцу
 	const rot2 = divide(ext[1], l)

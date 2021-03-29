@@ -21,7 +21,7 @@ cvToGlMatrix.set(
 
 export default class GL{
 	constructor(canvas){
-		this.renderer = new THREE.WebGLRenderer({ canvas, alpha: true })
+		this.renderer = new THREE.WebGLRenderer({ canvas, antialias: true })
 		this.renderer.autoClear = false
 
 		this.scene = new THREE.Scene()
