@@ -39,15 +39,12 @@ export default class GL{
 	}
 
 	setVideoBackground(video){
-		this.videoTexture = new THREE.VideoTexture( video );
-		this.videoTexture.needsUpdate = false
-
+		this.videoTexture = new THREE.Texture( video )
 		this.scene.background = this.videoTexture
 	}
 
 	updateBackground () {
-		this.videoTexture.update()
-		this.videoTexture.needsUpdate = false
+		this.videoTexture.needsUpdate = true
 	}
 
 	importModel(src){
