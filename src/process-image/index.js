@@ -7,7 +7,7 @@ let history = null
 
 const options = {
 	win_size: 30,
-	max_iterations: 50,
+	max_iterations: 30,
 	epsilon: 0.01,
 	min_eigen: 0.008
 }
@@ -56,8 +56,8 @@ export function processImage (imageData){
 				bottomLeftFinderPattern, bottomRightAlignmentPattern, topRightFinderPattern, topLeftFinderPattern
 			]
 
-			const curr_img_pyr = new jsfeat.pyramid_t(3)
-			const prev_img_pyr = new jsfeat.pyramid_t(3)
+			const curr_img_pyr = new jsfeat.pyramid_t(8)
+			const prev_img_pyr = new jsfeat.pyramid_t(8)
 			curr_img_pyr.allocate(width, height, jsfeat.U8_t|jsfeat.C1_t)
 			prev_img_pyr.allocate(width, height, jsfeat.U8_t|jsfeat.C1_t)
 			
