@@ -1,4 +1,5 @@
 import { inv, multiply, transpose, hypot, divide, cross, add, subtract, sum } from 'mathjs'
+import jsfeat from 'jsfeat'
 
 const angle = 70
 
@@ -33,6 +34,12 @@ export function projectPoints (_axis, cameraMatrix, matrix){
 	return points
 }
 
+const matrixA = new jsfeat.matrix_t(3, 3, jsfeat.F32_t | jsfeat.C1_t);
+const matrixW = new jsfeat.matrix_t(3, 3, jsfeat.F32_t | jsfeat.C1_t);
+const matrixU = new jsfeat.matrix_t(3, 3, jsfeat.F32_t | jsfeat.C1_t);
+const matrixV = new jsfeat.matrix_t(3, 3, jsfeat.F32_t | jsfeat.C1_t);
+
+
 export function decompose (_H, mtx){
 	
 	const H = Array.isArray(_H)? _H: bufferToArray(_H, 3, 3)
@@ -44,25 +51,19 @@ export function decompose (_H, mtx){
 
 	const rot1 = divide(ext[0], l)					//Мы нормализуем все по первому столбцу
 	const rot2 = divide(ext[1], l)
-	
-	const c = add(rot1, rot2)
-	const p = cross(rot1, rot2)
-	const d = cross(c, p)
+	const rot3 = cross(ext[0], ext[1])
 
-	//Потом мы собираем ту самую финальную матрицу (сначала по строкам, а потом повернем её)
+	matrixA.data.set(rot1, 0)
+	matrixA.data.set(rot2, 3)
+	matrixA.data.set(rot3, 6)
+
+	jsfeat.linalg.svd_decompose(matrixA, matrixW, matrixU, matrixV, jsfeat.SVD_V_T)
+	jsfeat.matmath.multiply(matrixA, matrixU, matrixV)
+
 	const _rotationMatrix = []
+	for(let i = 0; i < 3; i++)
+		_rotationMatrix.push(Array.from(matrixA.data.slice(i*3, i*3+3)))
 	
-	//Первые два столбца - нормализованные вектора вращения
-	_rotationMatrix.push(
-		multiply(add( divide(c, hypot(c)), divide(d, hypot(d)) ), 1 / Math.sqrt(2))
-	) 
-	_rotationMatrix.push(
-		multiply(subtract( divide(c, hypot(c)), divide(d, hypot(d)) ), 1 / Math.sqrt(2))
-	)
-
-	//Третий столбец - перпендикулярный им еще один вектор вращения
-	_rotationMatrix.push(cross( _rotationMatrix[0], _rotationMatrix[1] ))		
-
 	//Ну и четвертый - вектор перемещения
 	_rotationMatrix.push(divide(ext[2], l))
 
