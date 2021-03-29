@@ -35,6 +35,7 @@ function App() {
 	const [ fps, setFps ] = useState(0)
 	const videoRef = useRef()
 	const canvasRef = useRef()
+	const canvas2Ref = useRef()
 
 	useEffect(() => {
 		let stopFlag = false
@@ -65,6 +66,9 @@ function App() {
 			canvasRef.current.width = videoRef.current.videoWidth
 			canvasRef.current.height = videoRef.current.videoHeight
 
+			canvas2Ref.current.width = videoRef.current.videoWidth
+			canvas2Ref.current.height = videoRef.current.videoHeight
+
 			const gl = new GL(canvasRef.current)
 			gl.setVideoBackground(videoRef.current)
 
@@ -77,6 +81,21 @@ function App() {
 				setFps(Math.round(1000 / (performance.now() - time)))
 				
 				gl.render(data? data.matrix: null)
+
+				if(data && data.prev_xy){
+					const ctx = canvas2Ref.current.getContext("2d")
+
+					ctx.putImageData(imageData, 0, 0)
+
+					ctx.fillStyle = "green"
+					for(let i = 0; i < data.countCorners; i++){
+						ctx.beginPath()
+						ctx.arc(data.prev_xy[i*2], data.prev_xy[i*2+1], 3, 0, 2 * Math.PI)
+						ctx.closePath()
+						ctx.fill()
+					}
+					
+				}
 
 				if(!stopFlag)
 					requestAnimationFrame(computeImage)
@@ -94,6 +113,7 @@ function App() {
 		<div className="App">
 			<video  ref={videoRef} muted={true} playsInline={true} autoPlay={true} style={{display: "none"}}/>
 			<canvas ref={canvasRef}/>
+			<canvas ref={canvas2Ref} />
 			<div className="fps">{fps} FPS</div>
 		</div>
 	);
