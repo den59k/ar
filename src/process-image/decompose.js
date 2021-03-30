@@ -25,6 +25,23 @@ export function bufferToArray(buffer, rows, cols){
 	return res
 }
 
+export function distance(a, b){
+	let sum = 0
+	for(let i = 0; i < 3; i++)
+		for(let j = 0; j < 3; j++)
+			sum += Math.abs(a[i][j]-b[i][j])
+	
+	return sum
+}
+
+export function bufferToPoints (curr_xy){
+	const arr = []
+	for(let i = 0; i < 4; i++)
+		arr.push({ x: curr_xy[i*2], y: curr_xy[i*2+1] })
+
+	return arr
+}
+
 export function projectPoints (_axis, cameraMatrix, matrix){
 	const axis = transpose(_axis)
 	const _points = transpose(multiply(multiply(cameraMatrix, matrix), axis))

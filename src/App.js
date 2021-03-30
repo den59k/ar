@@ -1,19 +1,13 @@
 import { useEffect, useRef, useState } from "react";
-import { delay } from 'libs/delay'
+
 import { initCanvas } from 'libs/canvas'
 
 import { processImage } from 'process-image'
-import { projectPoints } from "process-image/decompose";
 
-import GL from '3d-graphics'
+import QR from 'services/qr'
+import GL from 'services/gl'
+import ImageProcessor from "services/image-processor";
 
-const axisColors = [ "red", "green", "blue"]
-const axis = [
-	[ 0, 0, 0, 1 ],
-	[ 10, 0, 0, 1 ],
-	[ 0, 10, 0, 1 ],
-	[ 0, 0, -10, 1 ]
-]
 
 const waitCameraData = (videoElement) => new Promise((res, rej) => {
 	let count = 0
@@ -55,40 +49,30 @@ function App() {
 			return stream
 		}
 
+		const imageProcessor = new ImageProcessor()
 
 		async function init(){
 			await initCamera(500)
 			await waitCameraData(videoRef.current)
-		
-			const { getImageData, canvas } = initCanvas(videoRef.current.videoWidth, videoRef.current.videoHeight)
+			await imageProcessor.init(videoRef.current)
 
 			canvasRef.current.width = videoRef.current.videoWidth
 			canvasRef.current.height = videoRef.current.videoHeight
 
 			const gl = new GL(canvasRef.current)
-			gl.setVideoBackground(canvas)
+			gl.setVideoBackground(imageProcessor.canvas)
 
-			async function computeImage() {
-
-				const imageData = getImageData(videoRef.current)
+			imageProcessor.process((data) => {
 				gl.updateBackground()
-				
-				const time = performance.now()
-				const data = processImage(imageData)
-				setFps(Math.round(1000 / (performance.now() - time)))
-				
-				gl.render(data? data.matrix: null)
 
-				if(!stopFlag)
-					requestAnimationFrame(computeImage)
-			}
-
-			computeImage()
+				setFps(data.fps)
+				gl.render(data.matrix)
+			})
 		}
 
 		init()
 
-		return () => stopFlag = true
+		return () => imageProcessor.stop()
 	}, [])
 
 	return (

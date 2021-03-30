@@ -117,9 +117,9 @@ export function processImage (imageData){
 
 		const T = bufferToArray(affine_transform.data, 3, 3)
 
-		if(Math.abs(det(T)-1) > 0.3){
-			history = null
-			return null
+		if(Math.abs(det(T)-1) > 0.2){
+				history = null
+				return null
 		}
 
 		const currentHomo = multiply(T, lastHomo)
