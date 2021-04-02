@@ -28,7 +28,7 @@ export default class GL{
 		this.camera = new THREE.PerspectiveCamera( 40, canvas.width / canvas.height, 0.1, 1000 )
 		this.camera.position.z = 0;
 
-		this.light = new THREE.AmbientLight( "E3B1B0", 1.5);
+		this.light = new THREE.AmbientLight( "#E3B1B0", 1.5);
 		this.directionalLight = new THREE.DirectionalLight( 0xffffff, 2 );
 		this.directionalLight.position.set(0.5, 1, 0.7)
 		this.directionalLight.castShadow = true
@@ -40,6 +40,8 @@ export default class GL{
 
 	setVideoBackground(video){
 		this.videoTexture = new THREE.Texture( video )
+		this.videoTexture.minFilter = THREE.LinearFilter
+		this.videoTexture.generateMipmaps = false
 		this.scene.background = this.videoTexture
 	}
 
