@@ -35,8 +35,8 @@ class ImageProcessor {
 		this.getImageData = getImageData
 		this.canvas = canvas
 
-		this.curr_img_pyr = new jsfeat.pyramid_t(12)
-		this.prev_img_pyr = new jsfeat.pyramid_t(12)
+		this.curr_img_pyr = new jsfeat.pyramid_t(10)
+		this.prev_img_pyr = new jsfeat.pyramid_t(10)
 		this.curr_img_pyr.allocate(this.width, this.height, jsfeat.U8_t|jsfeat.C1_t)
 		this.prev_img_pyr.allocate(this.width, this.height, jsfeat.U8_t|jsfeat.C1_t)
 
@@ -143,17 +143,19 @@ class ImageProcessor {
 		
 		const delta = distance (T, one)
 		
-		const d = Math.abs(det(subtract(T, one))) / (Date.now()-this.lastTime) * 1000
-		
+		const d = Math.abs(det(subtract(T, one)))
+
 		this.lastTime = Date.now()
 
-		console.log(d)
 
-		if(d < 0.5){
+		if(d < 0.005){
 			this.homography = multiply(T, this.homography)
 			this.swap()
 		}else{
 			this.delay = 0
+		}
+		
+		if(d > 0.1){
 			this.homography = null
 			return null
 		}
