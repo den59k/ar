@@ -35,8 +35,8 @@ class ImageProcessor {
 		this.getImageData = getImageData
 		this.canvas = canvas
 
-		this.curr_img_pyr = new jsfeat.pyramid_t(9)
-		this.prev_img_pyr = new jsfeat.pyramid_t(9)
+		this.curr_img_pyr = new jsfeat.pyramid_t(12)
+		this.prev_img_pyr = new jsfeat.pyramid_t(12)
 		this.curr_img_pyr.allocate(this.width, this.height, jsfeat.U8_t|jsfeat.C1_t)
 		this.prev_img_pyr.allocate(this.width, this.height, jsfeat.U8_t|jsfeat.C1_t)
 
@@ -94,7 +94,7 @@ class ImageProcessor {
 				this.curr_xy[i*2+1] = points[i].y
 			}
 			
-			this.delay = 1000
+			this.delay = 5000
 			this.saveFrame(imageData)
 			this.swap()
 		})
@@ -147,13 +147,13 @@ class ImageProcessor {
 		
 		this.lastTime = Date.now()
 
-		if(d < 0.2){
+		console.log(d)
+
+		if(d < 0.5){
 			this.homography = multiply(T, this.homography)
 			this.swap()
-		}else
+		}else{
 			this.delay = 0
-
-		if(d > 5){
 			this.homography = null
 			return null
 		}
