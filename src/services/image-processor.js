@@ -144,10 +144,8 @@ class ImageProcessor {
 		const delta = distance (T, one)
 
 		const d = Math.abs(det(subtract(T, one)))
-		
-		console.log(delta)
-		this.lastTime = Date.now()
 
+		this.lastTime = Date.now()
 
 		if(delta < 0.4){
 			this.homography = multiply(T, this.homography)

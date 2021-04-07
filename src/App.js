@@ -31,15 +31,14 @@ function App() {
 	const canvasRef = useRef()
 
 	useEffect(() => {
-		let stopFlag = false
-		async function initCamera(maxVideoSize){
+
+		async function initCamera(){
 
 			const stream = await navigator.mediaDevices.getUserMedia({
 				audio: false,
 				video: {
 					facingMode: 'environment',
-					width: maxVideoSize,
-					height: maxVideoSize,
+					width: 720
 				},
 			})
 
@@ -52,7 +51,7 @@ function App() {
 		const imageProcessor = new ImageProcessor()
 
 		async function init(){
-			await initCamera(500)
+			await initCamera()
 			await waitCameraData(videoRef.current)
 			await imageProcessor.init(videoRef.current)
 
@@ -76,9 +75,11 @@ function App() {
 	}, [])
 
 	return (
-		<div className="App">
-			<video  ref={videoRef} muted={true} playsInline={true} autoPlay={true} style={{display: "none"}}/>
-			<canvas ref={canvasRef}/>
+		<div className="App" style={{height: "100vh"}}>
+			<video  ref={videoRef} muted={true} playsInline={true} autoPlay={true} 
+				style={{display: "none"}}
+			/>
+			<canvas ref={canvasRef} style={{objectFit: "cover", width: "100%", height: "100%"}}/>
 			<div className="fps">{fps} FPS</div>
 		</div>
 	);
