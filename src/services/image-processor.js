@@ -1,5 +1,5 @@
 import { initCanvas } from "libs/canvas"
-import { det, multiply, subtract } from "mathjs"
+import { det, multiply, subtract, transpose } from "mathjs"
 import QR from "./qr"
 import jsfeat from 'jsfeat'
 import { bufferToArray, bufferToPoints, decompose, getCameraMatrix, distance } from "process-image/decompose"
@@ -142,20 +142,21 @@ class ImageProcessor {
 		const T = bufferToArray(affine_transform.data, 3, 3)
 		
 		const delta = distance (T, one)
-		
-		const d = Math.abs(det(subtract(T, one)))
 
+		const d = Math.abs(det(subtract(T, one)))
+		
+		console.log(delta, d)
 		this.lastTime = Date.now()
 
 
-		if(d < 0.005){
+		if(delta < 50){
 			this.homography = multiply(T, this.homography)
 			this.swap()
 		}else{
 			this.delay = 0
 		}
 		
-		if(d > 0.1){
+		if(delta > 100){
 			this.homography = null
 			return null
 		}
