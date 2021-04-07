@@ -145,18 +145,18 @@ class ImageProcessor {
 
 		const d = Math.abs(det(subtract(T, one)))
 		
-		console.log(delta, d)
+		console.log(delta)
 		this.lastTime = Date.now()
 
 
-		if(delta < 50){
+		if(delta < 0.4){
 			this.homography = multiply(T, this.homography)
 			this.swap()
 		}else{
 			this.delay = 0
 		}
 		
-		if(delta > 100){
+		if(delta > 1){
 			this.homography = null
 			return null
 		}
