@@ -22,7 +22,7 @@ cvToGlMatrix.set(
 export default class GL{
 	constructor(canvas){
 		this.renderer = new THREE.WebGLRenderer({ canvas, antialias: true })
-		this.renderer.autoClear = false
+		this.renderer.autoClear = true
 
 		this.scene = new THREE.Scene()
 		this.camera = new THREE.PerspectiveCamera( 40, canvas.width / canvas.height, 0.1, 1000 )
@@ -40,6 +40,7 @@ export default class GL{
 
 	setVideoBackground(video){
 		this.videoTexture = new THREE.Texture( video )
+		this.videoTexture.renderOrder = -1;
 		this.videoTexture.minFilter = THREE.LinearFilter
 		this.videoTexture.generateMipmaps = false
 		this.scene.background = this.videoTexture
