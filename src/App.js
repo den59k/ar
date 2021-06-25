@@ -77,7 +77,7 @@ function App() {
 	return (
 		<div className="App" style={{height: "100vh"}}>
 			<video  ref={videoRef} muted={true} playsInline={true} autoPlay={true} 
-				style={{display: "none"}}
+				style={{display: "none", objectFit: "cover"}}
 			/>
 			<canvas ref={canvasRef} style={{objectFit: "cover", width: "100%", height: "100%"}}/>
 			<div className="fps">{fps} FPS</div>

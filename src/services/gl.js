@@ -31,7 +31,7 @@ export default class GL{
 		this.light = new THREE.AmbientLight( "#E3B1B0", 1.5);
 		this.directionalLight = new THREE.DirectionalLight( 0xffffff, 2 );
 		this.directionalLight.position.set(0.5, 1, 0.7)
-		this.directionalLight.castShadow = true
+		//this.directionalLight.castShadow = true
 
 		this.scene.add( this.light, this.directionalLight )
 
@@ -54,7 +54,7 @@ export default class GL{
 
 		loader.load(src, gltf => {
 			this.gltf = gltf.scene
-			
+			this.gltf.renderOrder = 10
 			this.scene.add(gltf.scene)
 		})
 	}

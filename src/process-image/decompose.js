@@ -4,7 +4,7 @@ import jsfeat from 'jsfeat'
 const angle = 40
 
 export function getCameraMatrix (rows, cols){
-	const f = Math.max(rows, cols)/2/(Math.tan(angle/2*Math.PI/180))
+	const f = rows/2/(Math.tan(angle/2*Math.PI/180))
 
 	const mtx = [
 		[ f, 0, cols / 2 ],

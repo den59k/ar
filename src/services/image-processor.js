@@ -23,6 +23,14 @@ class ImageProcessor {
 		this.lastTimeQuery = 0
 	}
 
+	options = {
+		win_size: 20,
+		max_iterations: 50,
+		epsilon: 0.01,
+		min_eigen: 0.008,
+		levels: 15
+	}
+
 	async init(video){
 		this.qr = new QR()
 		await this.qr.init()
@@ -35,21 +43,13 @@ class ImageProcessor {
 		this.getImageData = getImageData
 		this.canvas = canvas
 
-		this.curr_img_pyr = new jsfeat.pyramid_t(10)
-		this.prev_img_pyr = new jsfeat.pyramid_t(10)
+		this.curr_img_pyr = new jsfeat.pyramid_t(this.options.levels)
+		this.prev_img_pyr = new jsfeat.pyramid_t(this.options.levels)
 		this.curr_img_pyr.allocate(this.width, this.height, jsfeat.U8_t|jsfeat.C1_t)
 		this.prev_img_pyr.allocate(this.width, this.height, jsfeat.U8_t|jsfeat.C1_t)
 
 		this.prev_xy = new Float32Array(4*2);
 		this.curr_xy = new Float32Array(4*2);
-
-		this.options = {
-			win_size: 30,
-			max_iterations: 40,
-			epsilon: 0.01,
-			min_eigen: 0.008
-		}
-
 		const scale = 2
 		this.initialPoints = [
 			{ x: -scale, y: scale },
